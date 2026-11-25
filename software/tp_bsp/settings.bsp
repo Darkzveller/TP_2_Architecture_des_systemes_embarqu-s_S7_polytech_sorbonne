@@ -2,10 +2,10 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>10 nov. 2026 16:07:58</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1794323278479</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\Users\plt21517175\Desktop\TP4\software\tp_bsp</BspGeneratedLocation>
-        <BspSettingsFile>.\settings.bsp</BspSettingsFile>
+        <BspGeneratedTimeStamp>25 nov. 2026 15:35:17</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1795617317713</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\elkat\Documents\Github\TP_2_Architecture_des_systemes_embarqu-s_S7_polytech_sorbonne\software\tp_bsp</BspGeneratedLocation>
+        <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios2_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_gen2_0</Cpu>
@@ -898,6 +898,12 @@
                 <Enabled>false</Enabled>
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
+        <MemoryMap>
+                <slaveDescriptor>pwm0</slaveDescriptor>
+                <addressRange>0x00000000 - 0x00000007</addressRange>
+                <addressSpan>8</addressSpan>
+                <attributes/>
+        </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>onchip_memory2_0</slaveDescriptor>
                 <addressRange>0x00020000 - 0x0003FFFF</addressRange>

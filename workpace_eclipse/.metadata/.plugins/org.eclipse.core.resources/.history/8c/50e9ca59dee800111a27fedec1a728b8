@@ -1,0 +1,15 @@
+/*
+ * avalon_pwm_regs.h
+ *
+ *  Created on: 25 nov. 2026
+ *      Author: elkat
+ */
+
+#ifndef AVALON_PWM_REGS_H_
+#define AVALON_PWM_REGS_H_
+
+
+
+
+
+#endif /* AVALON_PWM_REGS_H_ */

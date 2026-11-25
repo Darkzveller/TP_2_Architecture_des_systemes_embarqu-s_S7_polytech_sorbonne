@@ -14,77 +14,55 @@
  *
  */
 
-#include <stdio.h>
-#include <stdint.h>
-#include "system.h"
-static const uint8_t digit2segments[16] = {
- 0b11000000, /* 0 */
- 0b11111001, /* 1 */
- 0b10100100, /* 2 */
- 0b10110000, /* 3 */
- 0b10011001, /* 4 */
- 0b10010010, /* 5 */
- 0b10000010, /* 6 */
- 0b11111000, /* 7 */
- 0b10000000, /* 8 */
- 0b10010000, /* 9 */
- 0b10001000, /* A */
- 0b10000011, /* b */
- 0b11000110, /* C */
- 0b10100001, /* d */
- 0b10000110, /* E */
- 0b10001110 /* F */
-};
+// #include <stdio.h>
 
+// int main()
+// {
+//   printf("pipi!\n");
+
+//   return 0;
+// }
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "avalon_pwm_regs.h"
+#include "system.h"
 int main()
 {
-    printf("Hello from Nios II!\n");
-
-    /* Utilisation des adresses dynamiques générées dans system.h */
-    volatile uint32_t *led_pio = (uint32_t *)LED_BASE;
-    volatile uint32_t *sw_pio = (uint32_t *)SW_BASE;
-
-    volatile uint32_t *hex3_0_pio = (volatile uint32_t *)HEX3_0_BASE;
-    volatile uint32_t *hex5_4_pio = (volatile uint32_t *)HEX5_4_BASE;
-
-    uint32_t count = 0;
-    uint32_t pattern = 0;
-
-    while (1) {
-        uint32_t sw_value = *sw_pio; /* Lit l'état des interrupteurs */
-        *led_pio = sw_value;         /* Recopie l'état sur les LEDs */
-
-        /* Extraction des 5 chiffres décimaux */
-                uint8_t d0 = count % 10;            /* Unitės (HEX0) */
-                uint8_t d1 = (count / 10) % 10;     /* Dizaines (HEX1) */
-                uint8_t d2 = (count / 100) % 10;    /* Centaines (HEX2) */
-                uint8_t d3 = (count / 1000) % 10;   /* Milliers (HEX3) */
-                uint8_t d4 = (count / 10000) % 10;  /* Dizaines de milliers (HEX4) */
-
-                /* Construction du motif pour HEX3 à HEX0 */
-                uint32_t pattern3_0 = 0;
-                pattern3_0 |= (uint32_t)digit2segments[d0];
-                pattern3_0 |= ((uint32_t)digit2segments[d1] << 8);
-                pattern3_0 |= ((uint32_t)digit2segments[d2] << 16);
-                pattern3_0 |= ((uint32_t)digit2segments[d3] << 24);
-                *hex3_0_pio = pattern3_0;
-
-                /* Construction du motif pour HEX5 et HEX4 (HEX5 éteint avec 0xFF) */
-                uint32_t pattern5_4 = 0;
-                pattern5_4 |= (uint32_t)digit2segments[d4]; /* HEX4 */
-                pattern5_4 |= ((uint32_t)0xFF << 8);        /* HEX5 (éteint) */
-                *hex5_4_pio = pattern5_4;
-
-                /* Incrémenter le compteur et reboucler à 0 après 99999 */
-                count++;
-                if (count > 99999) {
-                    count = 0;
-                }        /* Boucle d'attente avec point-virgule correct */
-        for (volatile int i = 0; i < 50000; i++);
-
-        printf("count = %d\n", (int)count);
+  int rx_char;
+  printf("Application - PWM\n");
+  printf("\nEnter intensity LED between 1 and 4 (0 to exit)\n");
+  pwm_write_period(PWM0_BASE, 0xFF);
+  pwm_write_duty(PWM0_BASE, 0xFF);
+  while (1)
+  {
+    rx_char = getc(stdin);
+    switch (rx_char)
+    {
+    case '4':
+      pwm_write_duty(PWM0_BASE, 0xFF);
+      printf("Intensity level 4\n");
+      break;
+    case '3':
+      pwm_write_duty(PWM0_BASE, 0x80);
+      printf("Intensity level 3\n");
+      break;
+    case '2':
+      pwm_write_duty(PWM0_BASE, 0x30);
+      printf("Intensity level 2\n");
+      break;
+    case '1':
+      pwm_write_duty(PWM0_BASE, 0x10);
+      printf("Intensity level 1\n");
+      break;
+    case '0':
+      printf("\nBye bye ...\n");
+      return 0;
+      break;
+    default:
+      printf("Enter intensity LED between 1 and 4\n");
+      break;
     }
-
-    return 0;
+  }
+  return 0;
 }
-
