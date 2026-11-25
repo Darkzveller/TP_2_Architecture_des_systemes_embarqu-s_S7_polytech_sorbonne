@@ -22,47 +22,86 @@
 
 //   return 0;
 // }
+//************************************** PARTIE 1.4   **************************************
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include "avalon_pwm_regs.h"
+// #include "system.h"
+// int main()
+// {
+//   int rx_char;
+//   printf("Application - PWM\n");
+//   printf("\nEnter intensity LED between 1 and 4 (0 to exit)\n");
+//   pwm_write_period(PWM0_BASE, 0xFF);
+//   pwm_write_duty(PWM0_BASE, 0xFF);
+//   while (1)
+//   {
+//     rx_char = getc(stdin);
+//     switch (rx_char)
+//     {
+//     case '4':
+//       pwm_write_duty(PWM0_BASE, 0xFF);
+//       printf("Intensity level 4\n");
+//       break;
+//     case '3':
+//       pwm_write_duty(PWM0_BASE, 0x80);
+//       printf("Intensity level 3\n");
+//       break;
+//     case '2':
+//       pwm_write_duty(PWM0_BASE, 0x30);
+//       printf("Intensity level 2\n");
+//       break;
+//     case '1':
+//       pwm_write_duty(PWM0_BASE, 0x10);
+//       printf("Intensity level 1\n");
+//       break;
+//     case '0':
+//       printf("\nBye bye ...\n");
+//       return 0;
+//       break;
+//     default:
+//       printf("Enter intensity LED between 1 and 4\n");
+//       break;
+//     }
+//   }
+//   return 0;
+// }
+
+//************************************** PARTIE 1.5   **************************************
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
 #include "avalon_pwm_regs.h"
 #include "system.h"
-int main()
+
+#define PERIOD 249999
+#define STEP   2500
+#define TEMPO  5000
+
+int main(void)
 {
-  int rx_char;
-  printf("Application - PWM\n");
-  printf("\nEnter intensity LED between 1 and 4 (0 to exit)\n");
-  pwm_write_period(PWM0_BASE, 0xFF);
-  pwm_write_duty(PWM0_BASE, 0xFF);
-  while (1)
-  {
-    rx_char = getc(stdin);
-    switch (rx_char)
+    printf("Application - HeartBeat\n");
+
+    // Configuration de la frequence PWM a 200 Hz
+    pwm_write_period(PWM0_BASE, PERIOD);
+
+    while (1)
     {
-    case '4':
-      pwm_write_duty(PWM0_BASE, 0xFF);
-      printf("Intensity level 4\n");
-      break;
-    case '3':
-      pwm_write_duty(PWM0_BASE, 0x80);
-      printf("Intensity level 3\n");
-      break;
-    case '2':
-      pwm_write_duty(PWM0_BASE, 0x30);
-      printf("Intensity level 2\n");
-      break;
-    case '1':
-      pwm_write_duty(PWM0_BASE, 0x10);
-      printf("Intensity level 1\n");
-      break;
-    case '0':
-      printf("\nBye bye ...\n");
-      return 0;
-      break;
-    default:
-      printf("Enter intensity LED between 1 and 4\n");
-      break;
+        // Augmentation progressive de l'intensite
+        for (int duty = 0; duty < PERIOD + 1; duty += STEP)
+        {
+            pwm_write_duty(PWM0_BASE, duty);
+            usleep(TEMPO);
+        }
+
+        // Diminution progressive de l'intensite
+        for (int duty = PERIOD + 1; duty > 0; duty -= STEP)
+        {
+            pwm_write_duty(PWM0_BASE, duty);
+            usleep(TEMPO);
+        }
     }
-  }
-  return 0;
+
+    return 0;
 }

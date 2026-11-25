@@ -1,2 +1,2 @@
 echo off
-git status && git add . && git commit -m "1.4 fini" && git push
+git status && git add . && git commit -m "1.5 fini" && git push
